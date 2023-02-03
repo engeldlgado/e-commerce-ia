@@ -4,6 +4,9 @@ import User from '../../utils/models/User'
 import Cors from 'micro-cors'
 import typeDefs from '../../utils/models/Schema'
 import resolvers from '../../utils/Resolvers'
+import connectMongo from '../../utils/config'
+
+connectMongo()
 
 const jwt = require('jsonwebtoken')
 

@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
+require('dotenv').config()
+
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      require('./utils/config')
-    }
-    return config
-  },
   reactStrictMode: true,
   images: {
     domains: ['res.cloudinary.com']

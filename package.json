@@ -17,6 +17,7 @@
     "bcrypt": "^5.1.0",
     "daisyui": "^2.50.0",
     "deepmerge": "^4.3.0",
+    "dotenv": "^16.0.3",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "graphql": "^16.6.0",
