@@ -6,7 +6,7 @@ import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
-export const url = process.env.HOST || `https://${process.env.VERCEL_URL}`
+export const url = (process.env.NODE_ENV === 'development') ? 'http://localhost:3000' : `https://${process.env.VERCEL_URL}`
 let apolloClient
 
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -36,7 +36,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 const httpLink = new HttpLink({
-  uri: '/api/graphql',
+  uri: `${url}/api/graphql`,
   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
   fetchOptions: {
     // add authorization header with jwt token
