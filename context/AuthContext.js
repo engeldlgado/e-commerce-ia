@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken')
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-console.log('JWT: ', JWT_SECRET)
-
 const Context = createContext({
   token: null,
   user: null
@@ -23,12 +21,6 @@ export function AuthProvider ({ children }) {
   const [loading, setLoading] = useState(false)
 
   const client = useApolloClient()
-
-  const fetchData = async () => {
-    const { data } = await client.query({ query: GET_USER })
-    setUser(data.me)
-    setLoggedIn(true)
-  }
 
   const isTokenValid = async (authToken) => {
     if (authToken) {
@@ -54,7 +46,6 @@ export function AuthProvider ({ children }) {
   }
 
   useEffect(() => {
-    setLoading(true)
     if (typeof window !== 'undefined') {
       // token expired or invalid
       const authToken = localStorage.getItem('user-token')
@@ -75,12 +66,12 @@ export function AuthProvider ({ children }) {
 
       return () => clearInterval(tokenRefresh)
     }
-    setLoading(false)
   }
   , []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loginOrSignup = async (username, password) => {
     try {
+      setLoading(true)
       const { data } = await client.mutate({
         mutation: LOGIN_SIGNUP,
         variables: {
@@ -90,12 +81,13 @@ export function AuthProvider ({ children }) {
           }
         }
       })
-      setToken(data.createOrLoginUser.value)
       localStorage.setItem('user-token', data.createOrLoginUser.value)
-      fetchData()
+      await isTokenValid(data.createOrLoginUser.value)
+      setLoading(false)
       setMessage('You have successfully logged in.')
     } catch (error) {
       setError(error.message)
+      setLoading(false)
     }
   }
 

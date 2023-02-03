@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useAuthContext } from '../../context/AuthContext'
 import { LoginIcon } from '@heroicons/react/solid'
+
+function classNames (...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export const Login = () => {
   const {
     loginOrSignup,
     loggedIn,
     logout,
+    loading,
     user
   } = useAuthContext()
   const [username, setUsername] = useState('')
@@ -17,11 +22,6 @@ export const Login = () => {
     e.preventDefault()
     loginOrSignup(username, password)
   }
-
-  useEffect(() => {
-    setUsername('')
-    setPassword('')
-  }, [loggedIn])
 
   if (loggedIn) {
     return <User user={user} logout={logout} />
@@ -49,10 +49,15 @@ export const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button
-        className='inline-flex rounded btn hover:text-cyan-600'
+        className={
+          classNames(
+            'inline-flex rounded btn hover:text-cyan-600',
+            loading ? 'loading' : null
+          )
+        }
         type='submit'
       >
-        <LoginIcon className='w-6 h-6 mr-2' /> Log in
+        {loading ? 'Loading...' : <><LoginIcon className='w-6 h-6 mr-2' /> Log in</>}
       </button>
       <div className='input-group' />
     </form>
