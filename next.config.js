@@ -13,6 +13,7 @@ const nextConfig = {
   env: {
     JWT_SECRET: process.env.JWT_SECRET,
     HOST: process.env.HOST,
+    VERCEL_URL: process.env.VERCEL_URL,
 
     // Cloudinary
     CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
