@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Navigation from '../navigation/Navigation'
-import { Footer } from '../sections/Footer'
+import Notifications from '../common/Notifications'
+import Footer from '../sections/Footer'
 
 const Layout = ({ children, title, description }) => {
   const [theme, setTheme] = useState('')
@@ -39,6 +40,7 @@ const Layout = ({ children, title, description }) => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <meta name='description' content={description} />
       </Head>
+      <Notifications />
       <Navigation
         theme={theme}
         setTheme={setTheme}

@@ -1,7 +1,7 @@
 
 import { Links } from '../navigation/Navigation'
 
-export const Footer = () => {
+const Footer = () => {
   const year = new Date().getFullYear()
   return (
     <footer className='p-10 rounded footer footer-center text-base-content bg-gradient-to-t from-cyan-700 to-white dark:to-base-100'>
@@ -24,3 +24,5 @@ export const Footer = () => {
     </footer>
   )
 }
+
+export default Footer
