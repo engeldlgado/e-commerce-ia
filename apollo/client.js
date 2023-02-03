@@ -6,7 +6,7 @@ import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
-export const url = (process.env.NODE_ENV === 'development') ? 'http://localhost:3000' : `https://${process.env.HOST}`
+export const url = process.env.HOST || 'http://localhost:3000'
 let apolloClient
 
 const authMiddleware = new ApolloLink((operation, forward) => {
