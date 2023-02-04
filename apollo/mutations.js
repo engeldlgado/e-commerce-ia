@@ -34,3 +34,13 @@ export const GET_USER = gql`
     }
   }
 `
+
+export const PRODUCTS_FRAGMENT = gql`
+  fragment NewUpdateProduct on Product {
+    name
+    description
+    price
+    contact
+    gallery
+  }
+`

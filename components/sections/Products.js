@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { ProductModal } from '../modals/ProductModal'
 import { useQuery } from '@apollo/client'
 import { SEARCH_PRODUCTS } from '../../apollo/query'
+import { useAuthContext } from '../../context/AuthContext'
 
 const Product = () => {
+  const { products, setProducts } = useAuthContext()
   const [open, setOpen] = useState(false)
   // const [search, setSearch] = useState('')
   // const [page, setPage] = useState(0)
@@ -36,6 +38,12 @@ const Product = () => {
     }
   }, [error])
 
+  useEffect(() => {
+    if (data) {
+      setProducts(data.searchProducts.items)
+    }
+  }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (loader) {
     return (
       <div className='grid grid-cols-1 mt-20 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
@@ -53,11 +61,10 @@ const Product = () => {
     setProductId(id)
   }
 
-  const products = data?.searchProducts.items || []
   return (
     <div className='grid grid-cols-1 mt-20 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
-      {products && products.map((product) => (
-        <div key={product.id}>
+      {products && products.map((product, index) => (
+        <div key={index}>
           <div className='relative'>
             <div className='relative w-full overflow-hidden rounded-lg shadow-xl h-72'>
               <img

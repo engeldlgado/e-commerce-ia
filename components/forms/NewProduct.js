@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { RefreshIcon } from '@heroicons/react/solid'
 import { useMutation } from '@apollo/client'
 import { CREATE_PRODUCT } from '../../apollo/mutations'
+import { SEARCH_PRODUCTS } from '@/apollo/query'
 import { useAuthContext } from '../../context/AuthContext'
 
 function classNames (...classes) {
@@ -10,7 +11,7 @@ function classNames (...classes) {
 }
 
 const NewProduct = ({ setOpen }) => {
-  const { setError, setMessage } = useAuthContext()
+  const { setError, setMessage, setProducts } = useAuthContext()
   const [gallery, setGallery] = useState([])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -18,8 +19,30 @@ const NewProduct = ({ setOpen }) => {
   const [price, setPrice] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const [createProduct] = useMutation(CREATE_PRODUCT)
-  // TODO: Refresh the product list after creating a new product
+  const [createProduct] = useMutation(CREATE_PRODUCT, {
+    refetchQueries: [
+      {
+        query: SEARCH_PRODUCTS,
+        variables: {
+          filter: {
+            contains: ''
+          },
+          limit: 10,
+          offset: 0
+        }
+      }
+    ],
+    awaitRefetchQueries: true,
+    update (cache, { data }) {
+      // update the UI optimistically with the new product
+      setProducts((prev) => [data.createProduct, ...prev])
+    },
+    onError (error) {
+      // reset the UI to the previous state if the request fails
+      setError(error.message)
+      setProducts((prev) => prev.slice(0, prev.length - 1))
+    }
+  })
 
   const formatPrice = (price) => {
     return price.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') // price format 0.00

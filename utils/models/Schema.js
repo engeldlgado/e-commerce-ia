@@ -52,6 +52,20 @@ const typeDefs = gql`
     user: User!
   }
 
+  # Fragments
+  fragment NewProduct on Product {
+    id
+    name
+    description
+    price
+    contact
+    gallery
+    user {
+      id
+      username
+    }
+  }
+
 
   type Query {
     me: User

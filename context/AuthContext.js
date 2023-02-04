@@ -19,6 +19,7 @@ export function AuthProvider ({ children }) {
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [products, setProducts] = useState([])
 
   const client = useApolloClient()
 
@@ -100,7 +101,7 @@ export function AuthProvider ({ children }) {
   }
 
   return (
-    <Context.Provider value={{ token, user, loginOrSignup, logout, loggedIn, message, error, setMessage, setError, loading }}>
+    <Context.Provider value={{ token, user, loginOrSignup, logout, loggedIn, message, error, setMessage, setError, loading, products, setProducts }}>
       {children}
     </Context.Provider>
   )
