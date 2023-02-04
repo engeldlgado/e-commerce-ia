@@ -44,7 +44,7 @@ const typeDefs = gql`
   # Connections
   type ProductConnection {
     items: [Product!]!
-    nextToken: String
+    count: Int
   }
 
   type LoginPayload {
@@ -55,9 +55,9 @@ const typeDefs = gql`
 
   type Query {
     me: User
-    product(id: ID!): Product
+    product(id: ID): Product
     products: [Product!]!
-    searchProducts(filter: TableStringFilterInput, limit: Int, nextToken: String): ProductConnection
+    searchProducts(filter: TableStringFilterInput, limit: Int, offset: Int): ProductConnection
   }
 
   type Mutation {

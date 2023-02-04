@@ -80,7 +80,7 @@ export default function Navigation ({ setTheme, theme }) {
             type='checkbox'
             name='dark-mode'
             id='dark-mode'
-            className='dark-mode'
+            className='hidden dark-mode'
             onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             checked={theme === 'dark'}
 

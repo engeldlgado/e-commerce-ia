@@ -36,20 +36,28 @@ const resolvers = {
         .sort({ createdAt: -1 })
         .limit(args.limit)
         .skip(args.offset)
-      return products.populate('user')
+      return products.map((product) => product.populate('user'))
     },
     product: async (root, args) => {
       const product = await Product.findById(args.id)
       return product.populate('user')
     },
     searchProducts: async (root, args) => {
-      const products = await Product.find({
+      const filters = args.filter.contains || ''
+      const query = {
         $or: [
-          { name: convertStringToRegexp(args.text) },
-          { description: convertStringToRegexp(args.text) }
+          { name: convertStringToRegexp(filters) },
+          { description: convertStringToRegexp(filters) }
         ]
-      })
-      return products
+      }
+      const products = await Product.find(query)
+        .sort({ createdAt: -1 })
+        .limit(args.limit) // limit the number of results
+        .skip(args.offset) // skip the first n results
+
+      const count = await Product.countDocuments(query)
+
+      return { items: products.map((product) => product.populate('user')), count }
     },
     me: async (root, args, context) => {
       return context.userLogged?.populate('products')

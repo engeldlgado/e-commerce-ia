@@ -17,7 +17,7 @@ module.exports = {
       {
         dark: {
           ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
-          primary: '#6e40c9',
+          primary: '#0097A7',
 
           secondary: '#fb8532',
 
@@ -37,7 +37,7 @@ module.exports = {
         },
         light: {
           ...require('daisyui/src/colors/themes')['[data-theme=light]'],
-          primary: '#fb8532',
+          primary: '#0097A7',
 
           secondary: '#c75200',
 
@@ -57,6 +57,6 @@ module.exports = {
     ]
   },
   plugins: [
-    require('daisyui')
+    require('daisyui'), require('@tailwindcss/forms')
   ]
 }

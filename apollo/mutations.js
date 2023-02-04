@@ -15,6 +15,7 @@ export const CREATE_PRODUCT = gql`
     description
     price
     contact
+    gallery
   }
 }
 `

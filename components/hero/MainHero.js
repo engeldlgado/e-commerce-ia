@@ -6,7 +6,7 @@ import { Login } from '../forms/Login'
 
 export default function MainHero () {
   return (
-    <div id='home' className='pt-10 bg-gradient-to-br from-cyan-800 via-base-100 dark:from-cyan-800 dark:via-base-100 sm:pt-16 lg:pt-8 lg:pb-14 lg:overflow-hidden'>
+    <div id='home' className='pt-10 bg-gradient-to-br from-cyan-800 via-white to-white dark:from-cyan-800 dark:via-base-100 sm:pt-16 lg:pt-8 lg:pb-14 lg:overflow-hidden'>
       <div className='mx-auto max-w-7xl lg:px-8'>
         <div className='lg:grid lg:grid-cols-2 lg:gap-8'>
           <div className='max-w-md px-4 mx-auto sm:max-w-2xl sm:px-6 sm:text-center lg:px-0 lg:text-left lg:flex lg:items-center'>
