@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { ProductModal } from '../modals/ProductModal'
 import { useQuery } from '@apollo/client'
 import { SEARCH_PRODUCTS } from '../../apollo/query'
@@ -67,11 +68,25 @@ const Product = () => {
         <div key={index}>
           <div className='relative'>
             <div className='relative w-full overflow-hidden rounded-lg shadow-xl h-72'>
-              <img
-                src={product.gallery[0]}
-                alt={product.name}
-                className='object-cover object-center w-full h-full'
-              />
+              {product.gallery.length > 0
+                ? (
+                  <Image
+                    src={product.gallery[0]}
+                    alt={product.name}
+                    className='object-cover object-center w-auto h-full'
+                    width={288}
+                    height={288}
+                  />
+                  )
+                : (
+                  <Image
+                    src='/images/placeholder.png'
+                    alt={product.name}
+                    className='object-cover object-center w-auto h-full'
+                    width={288}
+                    height={288}
+                  />
+                  )}
             </div>
             <div className='relative mt-4'>
               <h3 className='font-medium text-gray-900 text-md dark:text-cyan-600'>{product.name}</h3>
