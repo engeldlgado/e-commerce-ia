@@ -222,7 +222,7 @@ function FileUploader (props) {
           formData.append('file', file)
           formData.append('folder', folder)
           // add original file name
-          formData.append('upload_preset', 'ai-marketplace')
+          formData.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET)
           const api = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_NAME}/upload`
 
           const data = await fetch(api, {

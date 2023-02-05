@@ -4,23 +4,24 @@ import { ProductModal } from '../modals/ProductModal'
 import { useQuery } from '@apollo/client'
 import { SEARCH_PRODUCTS } from '../../apollo/query'
 import { useStore } from '../../context/StoreContext'
+import Pagination from '../common/Pagination'
 
-const Product = ({ search }) => {
+const PRODUCT_PER_PAGE = 8
+
+const Product = ({ search, page }) => {
   const { products, setProducts, setError } = useStore()
   const [open, setOpen] = useState(false)
-  // const [page, setPage] = useState(0)
   const [loader, setLoader] = useState(false)
   const [productId, setProductId] = useState(null)
-
-  const PAGE_OFFSET = 12
 
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS, {
     variables: {
       filter: {
         contains: search
       },
-      limit: PAGE_OFFSET,
-      offset: 0 * PAGE_OFFSET
+      limit: PRODUCT_PER_PAGE,
+      offset: page * PRODUCT_PER_PAGE
+
     }
   })
 
@@ -40,15 +41,18 @@ const Product = ({ search }) => {
 
   useEffect(() => {
     if (data) {
-      setProducts(data.searchProducts.items)
+      setProducts({
+        items: data.searchProducts.items,
+        total: data.searchProducts.count
+      })
     }
   }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loader) {
     return (
-      <div className='grid grid-cols-1 mt-20 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
+      <div className='grid grid-cols-1 mt-6 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
         {
-          [...Array(4)].map((_, i) => (
+          [...Array(PRODUCT_PER_PAGE)].map((_, i) => (
             <ProductLoader key={i} />
           ))
         }
@@ -63,8 +67,8 @@ const Product = ({ search }) => {
 
   return (
     <>
-      <div className='grid grid-cols-1 mt-20 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
-        {products && products.map((product, index) => (
+      <div className='grid grid-cols-1 mt-6 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8'>
+        {products.items && products.items.map((product, index) => (
           <div key={index}>
             <div className='relative'>
               <div className='relative w-full overflow-hidden rounded-lg shadow-xl h-72'>
@@ -117,8 +121,10 @@ const Product = ({ search }) => {
 }
 
 export default function ProductFeed () {
+  const { products } = useStore()
   const [search, setSearch] = useState('')
   const [query, setQuery] = useState('')
+  const [page, setPage] = useState(0)
 
   // prevent multiple requests to the server by delaying the query by half a second
   useEffect(() => {
@@ -138,21 +144,40 @@ export default function ProductFeed () {
         <p className='max-w-xl mx-auto mt-4 text-center text-gray-500 dark:text-gray-400'>
           Our Marketplace is the ultimate platform for businesses to showcase and sell their products. With a user-friendly interface and advanced features, our platform provides businesses the tools to reach a wider audience, increase visibility and boost sales.
         </p>
-        <div className='relative mt-6'>
-          <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
-            <svg className='w-5 h-5 text-gray-400 dark:text-gray-600' viewBox='0 0 24 24' fill='none'>
-              <path d='M21 21L15.8 15.8M19 10C19 14.4183 15.4183 18 11 18C6.58172 18 3 14.4183 3 10C3 5.58172 6.58172 2 11 2C15.4183 2 19 5.58172 19 10Z' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
-            </svg>
-          </span>
-          <input
-            type='text'
-            className='block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-500 bg-white border border-gray-300 rounded-md sm:w-96 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm'
-            placeholder='Search on the marketplace...'
-            value={search}
-            onChange={handleSearch}
-          />
+        <div className='flex items-center justify-between'>
+          <div className='relative mt-6'>
+            <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
+              <svg className='w-5 h-5 text-gray-400 dark:text-gray-600' viewBox='0 0 24 24' fill='none'>
+                <path d='M21 21L15.8 15.8M19 10C19 14.4183 15.4183 18 11 18C6.58172 18 3 14.4183 3 10C3 5.58172 6.58172 2 11 2C15.4183 2 19 5.58172 19 10Z' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+              </svg>
+            </span>
+            <input
+              type='text'
+              className='block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-500 bg-white border border-gray-300 rounded-md md:w-96 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm'
+              placeholder='Search products...'
+              value={search}
+              onChange={handleSearch}
+            />
+          </div>
+          <div className='flex flex-col'>
+            {/* product count */}
+            <div className='flex items-center justify-center px-4 py-2 mt-6 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300'>
+              <span className='mr-2'>{products.total}</span>
+              <span>Products</span>
+
+            </div>
+          </div>
         </div>
-        <Product search={query} />
+
+        <Pagination
+          currentPage={page}
+          setCurrentPage={setPage}
+          totalProducts={products.total}
+          productsPerPage={PRODUCT_PER_PAGE}
+        >
+          <Product search={query} page={page} />
+        </Pagination>
+
       </div>
     </div>
   )

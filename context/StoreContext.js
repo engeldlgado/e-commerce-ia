@@ -19,7 +19,10 @@ export function StoreProvider ({ children }) {
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState({
+    items: [],
+    count: 0
+  })
 
   const client = useApolloClient()
 
@@ -35,7 +38,6 @@ export function StoreProvider ({ children }) {
         }
       } catch (err) {
         if (err instanceof jwt.JsonWebTokenError) {
-          console.log('Error: ', err.message)
           setToken(null)
           setUser(null)
           setLoggedIn(false)
