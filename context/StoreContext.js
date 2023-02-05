@@ -12,7 +12,7 @@ const Context = createContext({
   user: null
 })
 
-export function AuthProvider ({ children }) {
+export function StoreProvider ({ children }) {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -107,6 +107,6 @@ export function AuthProvider ({ children }) {
   )
 }
 
-export function useAuthContext () {
+export function useStore () {
   return useContext(Context)
 }

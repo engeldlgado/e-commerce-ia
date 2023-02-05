@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useAuthContext } from '../../context/AuthContext'
+import { useStore } from '../../context/StoreContext'
 
 function Notifications () {
-  const { message, error, setMessage, setError } = useAuthContext()
+  const { message, error, setMessage, setError } = useStore()
 
   useEffect(() => {
     if (message) {

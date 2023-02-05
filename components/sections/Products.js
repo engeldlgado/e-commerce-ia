@@ -3,10 +3,10 @@ import Image from 'next/image'
 import { ProductModal } from '../modals/ProductModal'
 import { useQuery } from '@apollo/client'
 import { SEARCH_PRODUCTS } from '../../apollo/query'
-import { useAuthContext } from '../../context/AuthContext'
+import { useStore } from '../../context/StoreContext'
 
 const Product = ({ search }) => {
-  const { products, setProducts, setError } = useAuthContext()
+  const { products, setProducts, setError } = useStore()
   const [open, setOpen] = useState(false)
   // const [page, setPage] = useState(0)
   const [loader, setLoader] = useState(false)

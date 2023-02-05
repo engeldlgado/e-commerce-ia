@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
-import { useAuthContext } from '../../context/AuthContext'
+import { useStore } from '../../context/StoreContext'
 import { LoginIcon } from '@heroicons/react/solid'
 import NewProductModal from '../modals/NewProductModal'
 
@@ -15,7 +15,7 @@ export const Login = () => {
     logout,
     loading,
     user
-  } = useAuthContext()
+  } = useStore()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [modal, setModal] = useState(false)

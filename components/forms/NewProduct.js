@@ -4,14 +4,14 @@ import { RefreshIcon } from '@heroicons/react/solid'
 import { useMutation } from '@apollo/client'
 import { CREATE_PRODUCT } from '../../apollo/mutations'
 import { SEARCH_PRODUCTS } from '@/apollo/query'
-import { useAuthContext } from '../../context/AuthContext'
+import { useStore } from '../../context/StoreContext'
 
 function classNames (...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 const NewProduct = ({ setOpen }) => {
-  const { setError, setMessage, setProducts } = useAuthContext()
+  const { setError, setMessage, setProducts } = useStore()
   const [gallery, setGallery] = useState([])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -209,7 +209,7 @@ function FileUploader (props) {
       // check file size of each file
       const fileSizes = files.map(file => file.size)
       if (fileSizes.some(size => size > 1000000)) {
-        setError('Algunos archivos son demasiado grandes. Por favor, asegúrese de que cada archivo sea inferior a 1 MB.')
+        setError('Some files are too large. Please select files less than 1MB.')
         return
       }
       const folder = 'ai-marketplace'
@@ -235,7 +235,7 @@ function FileUploader (props) {
           // set url to state
           newAttachments.push(secure_url)
         } catch (error) {
-          setError('Error al subir archivos')
+          setError('Error uploading files. Please try again.')
           setUploading(false)
         } finally {
           setUploading(false)
