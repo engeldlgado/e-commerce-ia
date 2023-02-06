@@ -76,7 +76,13 @@ export const ProductModal = (props) => {
                     <div className='grid items-start w-full grid-cols-1 gap-y-8 gap-x-6 sm:grid-cols-12 lg:gap-x-8'>
                       <div className='sm:col-span-4 lg:col-span-5'>
                         <div className='overflow-hidden bg-gray-100 rounded-lg aspect-w-1 aspect-h-1'>
-                          <Image src={product.gallery[0]} alt={product.name} className='object-cover object-center' width={500} height={500} />
+                          {product.gallery.length > 0
+                            ? (
+                              <Image src={product.gallery[0]} alt={product.name} className='object-cover object-center' width={500} height={500} />
+                              )
+                            : (
+                              <Image src='/images/placeholder.png' alt={product.name} className='object-cover object-center' width={500} height={500} />
+                              )}
                         </div>
                       </div>
                       <div className='sm:col-span-8 lg:col-span-7'>
