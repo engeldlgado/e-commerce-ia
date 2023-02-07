@@ -35,12 +35,19 @@ const NewProduct = ({ setOpen }) => {
     awaitRefetchQueries: true,
     update (cache, { data }) {
       // update the UI optimistically with the new product
-      setProducts((prev) => [...prev.items, data.createProduct])
+      setProducts((prev) => ({
+        items: [data.createProduct, ...prev.items],
+        total: prev.total + 1
+      })
+      )
     },
     onError (error) {
       // reset the UI to the previous state if the request fails
       setError(error.message)
-      setProducts((prev) => prev.items.slice(0, prev.length - 1))
+      setProducts((prev) => ({
+        items: prev.slice(0, prev.items.length - 1),
+        total: prev.total - 1
+      }))
     }
   })
 
