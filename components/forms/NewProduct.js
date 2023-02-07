@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from 'react'
-import { RefreshIcon } from '@heroicons/react/solid'
-import { useMutation } from '@apollo/client'
-import { CREATE_PRODUCT } from '../../apollo/mutations'
 import { SEARCH_PRODUCTS } from '@/apollo/query'
+import { useMutation } from '@apollo/client'
+import { RefreshIcon } from '@heroicons/react/solid'
+import { useState } from 'react'
+import { CREATE_PRODUCT } from '../../apollo/mutations'
 import { useStore } from '../../context/StoreContext'
 
 function classNames (...classes) {
@@ -35,12 +35,12 @@ const NewProduct = ({ setOpen }) => {
     awaitRefetchQueries: true,
     update (cache, { data }) {
       // update the UI optimistically with the new product
-      setProducts((prev) => [data.createProduct, ...prev])
+      setProducts((prev) => [...prev.items, data.createProduct])
     },
     onError (error) {
       // reset the UI to the previous state if the request fails
       setError(error.message)
-      setProducts((prev) => prev.slice(0, prev.length - 1))
+      setProducts((prev) => prev.items.slice(0, prev.length - 1))
     }
   })
 
