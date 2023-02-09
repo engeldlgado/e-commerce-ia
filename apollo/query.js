@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const SEARCH_PRODUCTS = gql`
-  query SearchProducts($filter: TableStringFilterInput, $limit: Int, $offset: Int) {
+  query SearchProducts($filter: TableStringFilterInput!, $limit: Int!, $offset: Int!) {
     searchProducts(filter: $filter, limit: $limit, offset: $offset) {
       items {
         id

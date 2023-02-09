@@ -1,7 +1,4 @@
-import { gql } from '@apollo/client'
-
-const typeDefs = gql`
-  type User {
+type User {
     id: ID!
     username: String!
     passwordHash: String!
@@ -70,8 +67,8 @@ const typeDefs = gql`
   type Query {
     me: User
     product(id: ID): Product
-    products: [Product!]!
-    searchProducts(filter: TableStringFilterInput, limit: Int, offset: Int): ProductConnection
+    products(limit: Int!, offset: Int!): ProductConnection
+    searchProducts(filter: TableStringFilterInput!, limit: Int!, offset: Int!): ProductConnection
   }
 
   type Mutation {
@@ -98,6 +95,3 @@ const typeDefs = gql`
     notContains: String
     startsWith: String
   }
-`
-
-export default typeDefs

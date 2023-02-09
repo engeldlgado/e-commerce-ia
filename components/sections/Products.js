@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { ProductModal } from '../modals/ProductModal'
 import { useQuery } from '@apollo/client'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { SEARCH_PRODUCTS } from '../../apollo/query'
 import { useStore } from '../../context/StoreContext'
 import Pagination from '../common/Pagination'
+import { ProductModal } from '../modals/ProductModal'
 
 const PRODUCT_PER_PAGE = 8
 
@@ -17,10 +17,10 @@ const Product = ({ search, page }) => {
   const { loading, error, data } = useQuery(SEARCH_PRODUCTS, {
     variables: {
       filter: {
-        contains: search
+        contains: search || ''
       },
-      limit: PRODUCT_PER_PAGE,
-      offset: page * PRODUCT_PER_PAGE
+      limit: PRODUCT_PER_PAGE || 12,
+      offset: page * PRODUCT_PER_PAGE || 0
 
     }
   })

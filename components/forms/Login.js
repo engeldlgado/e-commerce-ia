@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import Image from 'next/image'
-import { useStore } from '../../context/StoreContext'
 import { LoginIcon } from '@heroicons/react/solid'
+import Image from 'next/image'
+import { useState } from 'react'
+import { useStore } from '../../context/StoreContext'
 import NewProductModal from '../modals/NewProductModal'
 
 function classNames (...classes) {
@@ -22,7 +22,7 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    loginOrSignup(username, password)
+    loginOrSignup({ username, password })
   }
 
   if (loggedIn) {

@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-
-const mongoData = process.env.MONGO_URI
+import mongoose from 'mongoose'
+const mongoData:string = process.env.MONGO_URI || ''
 
 const connectMongo = async () => {
   mongoose.set('strictQuery', false) // prevent deprecation warning for next update of mongoose
@@ -15,6 +14,4 @@ const connectMongo = async () => {
   }
 }
 
-connectMongo()
-
-module.exports = connectMongo
+export default connectMongo

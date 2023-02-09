@@ -3,6 +3,7 @@ import { useApolloClient } from '@apollo/client'
 import jwt from 'jsonwebtoken'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { GET_USER, LOGIN_SIGNUP } from '../apollo/mutations'
+import { UserLogin } from '../types/gql'
 
 export interface IContext {
   token: string | null
@@ -15,7 +16,7 @@ export interface IContext {
     items: any[]
     count: number
   }
-  loginOrSignup: (username: string, password: string) => Promise<void>
+  loginOrSignup: ({ username, password }:UserLogin) => void
   logout: () => void
   setMessage: (message: string) => void
   setError: (error: string) => void
@@ -31,7 +32,7 @@ const Context = createContext<IContext | null>(null)
 
 export const StoreProvider = ({ children }:IStoreProvider) => {
   const [token, setToken] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<string | null>(null)
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -91,7 +92,7 @@ export const StoreProvider = ({ children }:IStoreProvider) => {
   }
   , []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const loginOrSignup = async (username: string, password: string) => {
+  const loginOrSignup = async ({ username, password }:UserLogin) => {
     try {
       setLoading(true)
       const { data } = await client.mutate({

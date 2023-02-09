@@ -1,11 +1,13 @@
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache'
 import { ApolloServer } from 'apollo-server-micro'
+import { readFileSync } from 'fs'
 import jwt from 'jsonwebtoken'
 import Cors from 'micro-cors'
-import connectMongo from '../../utils/config'
-import typeDefs from '../../utils/models/Schema'
+import connectMongo from '../../utils/config/mongoConnection'
 import User from '../../utils/models/User'
 import resolvers from '../../utils/Resolvers'
+
+const typeDefs = readFileSync('utils/models/Schema.graphql', { encoding: 'utf-8' })
 
 connectMongo()
 

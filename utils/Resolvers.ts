@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken'
+import { Resolvers } from '../types/gql'
 import {
   AuthenticationError,
-  AuthorizationError
+  AuthorizationError,
+  InternalError
 } from './ErrorHandler'
 import Product from './models/Product'
 import User from './models/User'
@@ -9,34 +11,7 @@ import User from './models/User'
 const bcrypt = require('bcrypt')
 const JWT_SECRET = process.env.JWT_SECRET
 
-// interface iArgs {
-//   id: string
-//   limit: number
-//   offset: number
-//   filter: {
-//     contains: string
-//   }
-// }
-
-// interface iContext {
-//   userLogged: object
-// }
-
-// interface iResolver {
-//   Query: {
-//     products: (root:unknown, args:iArgs) => Promise<unknown>
-//     product: (root:unknown, args:iArgs) => Promise<unknown>
-//     searchProducts: (root:unknown, args:iArgs) => Promise<unknown>
-//     me: (root:unknown, args:iArgs, context:iContext) => Promise<unknown>
-//   }
-//   Mutation: {
-//     createOrLoginUser: (root:unknown, args:unknown) => Promise<unknown>
-//     createProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
-//     updateProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
-//     deleteProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
-//   }
-// }
-export const convertStringToRegexp = (text) => {
+export const convertStringToRegexp = (text:string) => {
   let regexp = ''
   const textNormalized = text
     .normalize('NFD')
@@ -56,13 +31,13 @@ export const convertStringToRegexp = (text) => {
   return new RegExp(regexp, 'i') // "i" -> ignore case
 }
 
-const resolvers = {
+const resolvers:Resolvers = {
   Query: {
     products: async (root, args) => {
       const products = await Product.find({})
         .sort({ createdAt: -1 })
-        .limit(args.limit)
-        .skip(args.offset)
+        .limit(args.limit || 12)
+        .skip(args.offset || 0)
       return products.map((product) => product.populate('user'))
     },
     product: async (root, args) => {
@@ -79,8 +54,8 @@ const resolvers = {
       }
       const products = await Product.find(query)
         .sort({ createdAt: -1 })
-        .limit(args.limit) // limit the number of results
-        .skip(args.offset) // skip the first n results
+        .limit(args.limit || 12)
+        .skip(args.offset || 0)
 
       const count = await Product.countDocuments(query)
 
@@ -106,6 +81,9 @@ const resolvers = {
           username: username.username,
           id: username.id
         }
+        if (!JWT_SECRET) {
+          throw new InternalError('Secret Algorithm is not defined')
+        }
         return { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: username }
       }
 
@@ -118,7 +96,9 @@ const resolvers = {
         username: signUser.username,
         id: signUser.id
       }
-      // console.log('userForToken', { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: signUser })
+      if (!JWT_SECRET) {
+        throw new InternalError('Secret Algorithm is not defined')
+      }
 
       return { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: signUser }
     },
