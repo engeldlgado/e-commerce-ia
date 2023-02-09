@@ -1,24 +1,19 @@
-import { ApolloServer } from 'apollo-server-micro'
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache'
-import User from '../../utils/models/User'
+import { ApolloServer } from 'apollo-server-micro'
+import jwt from 'jsonwebtoken'
 import Cors from 'micro-cors'
-import typeDefs from '../../utils/models/Schema'
-import resolvers from '../../utils/Resolvers'
 import connectMongo from '../../utils/config'
+import typeDefs from '../../utils/models/Schema'
+import User from '../../utils/models/User'
+import resolvers from '../../utils/Resolvers'
 
 connectMongo()
-
-const jwt = require('jsonwebtoken')
-
-const JWT_SECRET = process.env.JWT_SECRET
 
 const cors = Cors({
   origin: 'https://studio.apollographql.com',
   allowCredentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200,
-  preflightContinue: false
+  allowMethods: ['GET', 'POST', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization']
 })
 
 export const config = {
@@ -33,8 +28,9 @@ const server = new ApolloServer({
   cache: new InMemoryLRUCache(),
   context: async ({ req }) => {
     const token = req ? req.headers.authorization : null
-    if (token && token.startsWith('bearer ')) {
-      const decodedToken = jwt.verify(token.substring(7), JWT_SECRET)
+    const JWT_SECRET = process.env.JWT_SECRET
+    if (token && token.startsWith('bearer ') && JWT_SECRET) {
+      const decodedToken = jwt.verify(token.substring(7), JWT_SECRET, { algorithms: ['HS256'] }) as { id: string }
       const userLogged = await User.findById(decodedToken.id)
       return { userLogged }
     }

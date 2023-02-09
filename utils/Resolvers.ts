@@ -1,14 +1,41 @@
-import User from './models/User.js'
-import Product from './models/Product.js'
+import jwt from 'jsonwebtoken'
 import {
   AuthenticationError,
   AuthorizationError
 } from './ErrorHandler'
+import Product from './models/Product'
+import User from './models/User'
 
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET
 
+// interface iArgs {
+//   id: string
+//   limit: number
+//   offset: number
+//   filter: {
+//     contains: string
+//   }
+// }
+
+// interface iContext {
+//   userLogged: object
+// }
+
+// interface iResolver {
+//   Query: {
+//     products: (root:unknown, args:iArgs) => Promise<unknown>
+//     product: (root:unknown, args:iArgs) => Promise<unknown>
+//     searchProducts: (root:unknown, args:iArgs) => Promise<unknown>
+//     me: (root:unknown, args:iArgs, context:iContext) => Promise<unknown>
+//   }
+//   Mutation: {
+//     createOrLoginUser: (root:unknown, args:unknown) => Promise<unknown>
+//     createProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
+//     updateProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
+//     deleteProduct: (root:unknown, args:unknown, context:unknown) => Promise<unknown>
+//   }
+// }
 export const convertStringToRegexp = (text) => {
   let regexp = ''
   const textNormalized = text
@@ -79,7 +106,7 @@ const resolvers = {
           username: username.username,
           id: username.id
         }
-        return { value: jwt.sign(userForToken, JWT_SECRET, { expiresIn: '7d' }), user: username }
+        return { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: username }
       }
 
       const user = new User({
@@ -91,7 +118,9 @@ const resolvers = {
         username: signUser.username,
         id: signUser.id
       }
-      return { value: jwt.sign(userForToken, JWT_SECRET, { expiresIn: '7d' }), user: signUser }
+      // console.log('userForToken', { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: signUser })
+
+      return { value: jwt.sign(userForToken, JWT_SECRET, { algorithm: 'HS256', expiresIn: '7d' }), user: signUser }
     },
     createProduct: async (root, args, context) => {
       const loggedUser = context.userLogged

@@ -1,8 +1,8 @@
 // Create a Error Handler Factory to handle errors
 
-const createErrorHandler = (name) =>
+const createErrorHandler = (name:string) =>
   class CustomError extends Error {
-    constructor (message) {
+    constructor (message:string) {
       super(message)
       this.name = name
     }

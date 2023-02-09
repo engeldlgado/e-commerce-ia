@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const { Schema } = mongoose
 
-mongoose.promise = global.Promise
+mongoose.Promise = global.Promise
 
 const ProductSchema = new Schema({
   name: {
@@ -40,4 +40,4 @@ ProductSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.models.Product || mongoose.model('Product', ProductSchema)
+export default mongoose.models.Product || mongoose.model('Product', ProductSchema)

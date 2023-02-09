@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const { Schema } = mongoose
 
-mongoose.promise = global.Promise
+mongoose.Promise = global.Promise
 
 const UserSchema = new Schema({
   username: {
@@ -40,4 +40,4 @@ UserSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.models.User || mongoose.model('User', UserSchema)
+export default mongoose.models.User || mongoose.model('User', UserSchema)

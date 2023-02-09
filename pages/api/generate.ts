@@ -1,8 +1,14 @@
 import cohere from 'cohere-ai'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-cohere.init(process.env.COHERE_API_KEY)
+const COHERE_API_KEY: string = process.env.COHERE_API_KEY || ''
 
-export default async function generate (req, res) {
+cohere.init(COHERE_API_KEY)
+
+export default async function generate (
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
     const response = await cohere.generate({
       model: 'command-xlarge-nightly',
@@ -17,7 +23,7 @@ export default async function generate (req, res) {
       return_likelihoods: 'NONE'
     })
     res.status(200).json({ text: response.body.generations[0].text })
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message })
   }
 };
