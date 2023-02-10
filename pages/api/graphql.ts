@@ -7,7 +7,10 @@ import connectMongo from '../../utils/config/mongoConnection'
 import User from '../../utils/models/User'
 import resolvers from '../../utils/Resolvers'
 
-const typeDefs = readFileSync('utils/models/Schema.graphql', { encoding: 'utf-8' })
+const path = require('path')
+const schemaDirectory = path.resolve(process.cwd(), 'utils/models/Schema.graphql')
+
+const typeDefs = readFileSync(schemaDirectory, { encoding: 'utf-8' })
 
 connectMongo()
 
