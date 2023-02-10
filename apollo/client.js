@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 // Deployed on Vercel
-export const url = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` || 'http://localhost:3000'
+export const url = `//${process.env.NEXT_PUBLIC_VERCEL_URL}` || 'http://localhost:3000'
 let apolloClient
 
 const authMiddleware = new ApolloLink((operation, forward) => {
