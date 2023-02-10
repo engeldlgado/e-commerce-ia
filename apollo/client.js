@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
-import { ApolloClient, HttpLink, InMemoryCache, ApolloLink, from } from '@apollo/client'
+import { ApolloClient, ApolloLink, from, HttpLink, InMemoryCache } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { concatPagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { useMemo } from 'react'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
-export const url = process.env.HOST || 'http://localhost:3000'
+// Deployed on Vercel
+export const url = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` || 'http://localhost:3000'
 let apolloClient
 
 const authMiddleware = new ApolloLink((operation, forward) => {
